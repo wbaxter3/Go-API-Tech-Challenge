@@ -1,119 +1,105 @@
 ![CapTech Banner](resources/images/CaptechLogo.png)
 
-# python-api-tech-challenge: Introduction
+# Go API Tech Challenge: Assignment
 
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
-- [Prerequisites](#prerequisites)
-- [Development Environment Setup](#development-environment-setup)
-- [Assignment Work & Submission](#assignment-work--submission)
-- [Next Part](#if-you-made-it-this-far-congratulations-you-are-now-ready-to-proceed-with-the-tech-challenge)
+- [Tech Challenge Assignment](#tech-challenge-assignment)
+- [Project Requirements Checklist](#project-requirements-checklist)
 
+### Setting up a database instance
 
-## Overview
+For this Tech Challenge, we will be using Postgres running in a docker container as our database.
+This has already been configured for you using a docker-compose file. To start the data base, run
+the following:
 
-Welcome to the Python API Tech Challenge, presented by CapTech Consulting! The Challenge consists of 2 parts. This guide for Part 1 of the Challenge provides instructions for setting up your development environment in order to begin the main part of the challenge in Part 2. **Be sure to read the README for each part before beginning!**
+```bassh
+make db_up
+```
 
-## Prerequisites
+## Tech Challenge Assignment
 
-This Tech Challenge introduces building web APIs with Python via a common use case: the creation of a REST API server. The REST API server will expose endpoints that allow users to perform Create, Read, Update, and Delete (CRUD) operations of information related to Courses, Professors, and Students of a fictional educational institution.
+### Summary
 
-This tech challenge can be completed in multiple different ways including using the standard library or using a 3rd party framework such as Flask or FastAPI. The choice of how you complete this challenge is up to you as long as you complete all of the requirements laid out in Step 2!
+For this Tech Challenge, you will create a web API that exposes endpoints that read from and write
+to a database that represents a fictional college and contains courses and people.
 
-To complete the challenge, the following are **REQUIRED**:
+### Web Framework
 
-- A basic understanding of programming with Python
-- A local development environment with the following software installed:
-  - **Python** version 3.12+
-  - **Git** (version control system)
-  - **VSCode or your favorite Integrated Development Environment (IDE)**
-  - **DB Browser for SQLite**
-  - **Access to the Python API Tech Challenge code repository on GitHub**
-  
-## Development Environment Setup
+You have the freedom to build this API with whatever tool you would like. With that being said, you
+are strongly encouraged to use the standard library and/or chi where possible.
 
-### Install Python
+### Data
 
-To install Python, see the official [Python
-documentation](https://wiki.python.org/moin/BeginnersGuide/Download)
-for your operating system. Please note that this Tech Challenge was developed using Python 3.12. Other versions may work but we cannot guarantee that.
+The data for this project lives inside of the database we created in the
+previous section. As part of this Tech Challenge, you will need to access this data.
 
-### Install Git
+Please note that you will need to establish relationships between each table in order to complete
+this challenge.
 
-To install Git, see the installation instructions from [Git's
-documentation](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for your operating system.
-s
-### IDEs
+### Project Structure
 
-You may use your preferred IDE to complete this challenge. We will be using VSCode which can be installed [here](https://code.visualstudio.com/download).
+Your project will need to define three routes, one each for `courses` and `person`. Each route will
+need to include handlers for `get all`, `get by id`, `update by id`, `add`, and `delete` actions.
 
-If you are using VSCode, we also recommend installing the following extensions:
-- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) (Python language support for VSCode)
-- [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) (Python linter and language support)
-- [IntelliCode](https://marketplace.visualstudio.com/items?itemName=VisualStudioExptTeam.vscodeintellicode) (code autocomplete)
-- [Black](https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter) (Python opinionated formatter)
-- [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) (REST client for testing endpoints)
+You should follow idiomatic go principles for your project. This includes project structure, code
+organization, and naming conventions.
 
-Lastly, if you need help getting used to writing Python in VSCode, see this help article [here](https://code.visualstudio.com/docs/languages/python).
+Your final product should include the web server, a dockerfile, and integration for that docker file
+in the provided docker compose. You should also update the makefile with any needed commands to get
+your app running. In addition, any documentation that an outside developer would need to get your
+app up and running should be included.
 
-### Install SQLite and DB Browser for SQLite
+Bellow are further details for each endpoint.
 
-This tech challenge uses SQLite as a practice database. Installation instructions can be found [here](https://www.tutorialspoint.com/sqlite/sqlite_installation.htm).
+---
 
-To make viewing this database easier, we recommend using DB Browser for SQLite which can be installed [here](https://sqlitebrowser.org/dl/).
+### `api/course`
 
-### Access the Tech Challenge
+| Request Type | Endpoint                              | Query Parameters | Request Body                                         | Response Type                                                        | Instructions                                                                                                                  |
+|--------------|---------------------------------------|------------------|------------------------------------------------------|----------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| GET          | http://localhost:8000/api/course      | *none*           | *none*                                               | JSON-formatted string representing  a list of  `Course` objects      | Return all `Course` objects from the database.                                                                                |
+| GET          | http://localhost:8000/api/course/{id} | *none*           | *none*                                               | JSON-formatted string representing  a `Course` object                | Return a given `Course` object based on `id`.                                                                                 |
+| PUT          | http://localhost:8000/api/course/{id} | *none*           | JSON-formatted string representing a `Course` object | JSON-formatted string representing  an updated `Course` object       | Update a given `Course` object in the database based on `id`. The `Course` object passed to the endpoint should be validated. |
+| POST         | http://localhost:8000/api/course      | *none*           | JSON-formatted string representing a `Course` object | JSON-formatted string representing  a the new `Course` object's `id` | Add a new `Course` object to the database. `id` does not need to be provided as the database will generate it.                |
+| DELETE       | http://localhost:8000/api/course/{id} | *none*           | *none*                                               | JSON-formatted string representing  a deletion confirmation message  | Delete a given `Course` object from the database based on `id`.                                                               |
 
-In order to obtain the source code and instructions for each part of the Tech Challenge, you will need access to the Challenge's code repository on GitHub. See the following instructions to request access and clone the repo:
+Here is the schema for a `Course` object
+| Column Name | Column Type |
+| ----------- | ----------- |
+| `id`        | integer |
+| `name`      | string |
 
-#### Create an Account and Setup Authentication
+---
 
-1. **Create a new Github account** with a new username and password [here](https://github.com/join?source=header-home).
-1. **Link your new GitHub account to CapTech** by clicking [here](http://capte.ch/github) after logging into GitHub with your new account. Once there you should see a pop-up on the top of the page with a button to authenticate your account. You can follow the steps to authenticate.
-1. In the future, if your browser logs you in automatically, you may not see the CapTech tech challenges. You will need to click on the single sign-on link and authenticate through CapTech to see the repositories. This link is located on the top of your home screen.
+### `api/person`
 
-## Assignment Work & Submission
+| Request Type | Endpoint                                | Query Parameters                 | Request Body                                         | Response Type                                                        | Instructions                                                                                                                                                                                             |
+|--------------|-----------------------------------------|----------------------------------|------------------------------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| GET          | http://localhost:8000/api/person        | `name`: string<br>`age`: integer | *none*                                               | JSON-formatted string representing  a list of  `Person` objects      | Return all `People` objects from the database. If query parameters are passed to the endpoint, filter off of them.                                                                                       |
+| GET          | http://localhost:8000/api/person/{name} | *none*                           | *none*                                               | JSON-formatted string representing  a `Person` object                | Return a given `Person` based off of `name`.                                                                                                                                                             |
+| PUT          | http://localhost:8000/api/person/{name} | *none*                           | JSON-formatted string representing a `Person` object | JSON-formatted string representing  an updated `Person` object       | Update a given `Person` in the database based on `name`. The `Person` object passed to the endpoint should be validated.                                                                                 |
+| POST         | http://localhost:8000/api/person        | *none*                           | JSON-formatted string representing a `Person` object | JSON-formatted string representing  a the new `Person` object's `id` | Add a new `Person` to the database. `id` does not need to be provided as the database will generate it. If any `Course` objects `id`s are passed in, that association should be updated in the database. |
+| DELETE       | http://localhost:8000/api/person/{name} | *none*                           | *none*                                               | JSON-formatted string representing  a deletion confirmation message  | Delete a given `Person` object from the database based on `name`.                                                                                                                                        |
 
-[GitHub classroom](https://classroom.github.com/a/xMxWfNub) should already have generated a copy of the tech challenge for you to work on named `captechconsulting/python-api-tech-challenge-{your GitHub username}`. You will be working from this repository for the duration of the challenge.
-> [!WARNING]  
-> **GitHub classroom is not yet configured for this project. To proceed, please clone this repo and then push it to your own GitHub account.**
+Here is the schema for a `Person` object:
+| Column Name | Column Type | Notes |
+| ------------ | ------------------ | -------------------------------------------- |
+| `id`         | integer | primary key |
+| `first_name` | string | N/A |
+| `last_name`  | string | N/A |
+| `type`       | string | possible values are `student` and `professor` |
+| `age`        | integer | N/A |
+| `courses`    | list of integers | list of course ids |
 
-### Working branch
+---
 
-Once you have cloned your working repository to your local machine, create a branch to house work for each part.
+## Project Requirements Checklist
 
-1. Navigate to the cloned repository on your local machine
-1. Check out the relevant branch with the starter code for the part you are working on. Using `api_tech_challenge` as an example:
-
-    ```bash
-    git checkout api_tech_challenge
-    ```
-
-1. Create a new branch for your development work. For example:
-
-    ```bash
-    git checkout -b develop/api_tech_challenge
-    ```
-
-1. Push your new local branch to the remote repository and set your local branch to track the new remote branch:
-
-    ```bash
-    git push -u origin develop/api_tech_challenge
-    ```
-
-After you have completed your work for each part and committed & pushed your changes up to the remote repository, you
-are ready to open a pull request for submission.
-
-### Submission
-
-1. Navigate to your GitHub repository
-1. Open a pull request from your working branch to the starting branch (for example: `develop/api_tech_challenge`&rarr;`api_tech_challenge`).
-1. **Be sure to assign a reviewer so they will receive a notification that your solution is ready for review.**
-
-  > If you do not have a reviewer yet, or need assistance, please make a post in the Python CoP channel [Tech Challenge Collaboration](https://teams.microsoft.com/l/channel/19%3Ab8ed52b50ec44d4e9f03ca4e60a5df43%40thread.tacv2/Tech%20Challenge%20Collaboration?groupId=713ca228-a89f-4f1f-99ea-e684d961144b&tenantId=).
-
-
-## If you made it this far, Congratulations! You are now ready to proceed with the Tech Challenge!
-
-[Go to Python API Tech Challenge: Assignment](../../tree/api_tech_challenge)
+- [ ] Your API should use port `8000`.
+- [ ] Your API should have a single entry point.
+- [ ] Each endpoint should return the appropriate statues code with each response.
+- [ ] If an error is encountered by the application, an informative error message should be returned
+  to the client and your application should also log details.
+- [ ] Your project should include unit tests with 80% unit test coverage.
