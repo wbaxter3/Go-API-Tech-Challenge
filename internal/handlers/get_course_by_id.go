@@ -3,13 +3,17 @@ package handlers
 import (
 	"context"
 	"go-api-tech-challenge/internal/models"
+	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/go-chi/httplog/v2"
 )
 
-type courseLister interface {
-	ListCourses(ctx context.Context) ([]models.Course, error)
+type courseGetter interface {
+	GetCourseByID(ctx context.Context, ID int) (models.Course, error)
 }
 
 // HandleListCourses is a Handler that returns a list of all courses.
@@ -22,14 +26,24 @@ type courseLister interface {
 // @Success		200		{object}	handlers.responseCourses
 // @Failure		500		{object}	handlers.responseErr
 // @Router		/courses	[GET]
-func HandleListCourses(logger *httplog.Logger, service courseLister) http.HandlerFunc {
+func HandleGetCourseByID(logger *httplog.Logger, service courseGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// setup
-		ctx := r.Context()
 
-		// get values from database
-		courses, err := service.ListCourses(ctx)
+		ctx := r.Context()
+		// setup
+		idString := chi.URLParam(r, "ID")
+		ID, err := strconv.Atoi(idString)
 		if err != nil {
+			logger.Error("error getting ID", "error", err)
+			encodeResponse(w, logger, http.StatusBadRequest, responseErr{
+				Error: "Not a valid ID",
+			})
+			return
+		}
+		// get values from database
+		course, err := service.GetCourseByID(ctx, ID)
+		if err != nil {
+			log.Println(err)
 			logger.Error("error getting all courses", "error", err)
 			encodeResponse(w, logger, http.StatusInternalServerError, responseErr{
 				Error: "Error retrieving data",
@@ -38,9 +52,9 @@ func HandleListCourses(logger *httplog.Logger, service courseLister) http.Handle
 		}
 
 		// return response
-		coursesOut := mapMultipleOutput(courses)
-		encodeResponse(w, logger, http.StatusOK, responseCourses{
-			Courses: coursesOut,
+		coursesOut := mapOutput(course)
+		encodeResponse(w, logger, http.StatusOK, responseCourse{
+			Course: coursesOut,
 		})
 	}
 }

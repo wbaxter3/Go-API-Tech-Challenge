@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"go-api-tech-challenge/internal/config"
-	"go-api-tech-challenge/internal/database"
 	"go-api-tech-challenge/internal/routes"
 	"go-api-tech-challenge/internal/services"
 	"log"
@@ -19,51 +18,43 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httplog/v2"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
-	ctx := context.Background()
-	if err := run(ctx); err != nil {
+	if err := run(); err != nil {
 		log.Fatalf("Startup failed. err: %v", err)
 	}
 }
 
-func run(ctx context.Context) error {
+func run() error {
 	// Setup
 	cfg, err := config.New()
 	if err != nil {
 		return fmt.Errorf("[in run]: %w", err)
 	}
 
-	logger := httplog.NewLogger("user-microservice", httplog.Options{
+	logger := httplog.NewLogger("api", httplog.Options{
 		LogLevel:        cfg.LogLevel,
 		JSON:            false,
 		Concise:         true,
 		ResponseHeaders: false,
 	})
 
-	db, err := database.New(
-		ctx,
-		fmt.Sprintf(
-			"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-			cfg.DBHost,
-			cfg.DBUser,
-			cfg.DBPassword,
-			cfg.DBName,
-			cfg.DBPort,
-		),
-		logger,
-		time.Duration(cfg.DBRetryDuration)*time.Second,
+	connString := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		cfg.DBHost,
+		cfg.DBUser,
+		cfg.DBPassword,
+		cfg.DBName,
+		cfg.DBPort,
 	)
-	if err != nil {
-		return fmt.Errorf("[in run]: %w", err)
-	}
 
-	defer func() {
-		if err = db.Close(); err != nil {
-			logger.Error("Error closing db connection", "err", err)
-		}
-	}()
+	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to connect to database: %w", err)
+	}
 
 	router := chi.NewRouter()
 

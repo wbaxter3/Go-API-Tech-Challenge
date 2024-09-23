@@ -31,9 +31,17 @@ func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svs *services.Cours
 		opt(&options)
 	}
 
-	if options.registerHealthRoute {
-		router.Get("/lambda/health-check", handlers.HandleHealth(logger))
-	}
+	router.Route("/api", func(router chi.Router) {
 
-	router.Get("/courses", handlers.HandleListCourses(logger, svs))
+		if options.registerHealthRoute {
+			router.Get("/health-check", handlers.HandleHealth(logger))
+		}
+
+		router.Route("/course", func(router chi.Router) {
+
+			router.Get("/", handlers.HandleListCourses(logger, svs))
+			router.Get("/{ID}", handlers.HandleGetCourseByID(logger, svs))
+		})
+	})
+
 }
