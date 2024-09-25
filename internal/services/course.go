@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"go-api-tech-challenge/internal/models"
-	"log"
 )
 
 type CourseService struct {
@@ -59,21 +58,13 @@ func (s CourseService) GetCourse(ctx context.Context, courseID int) (models.Cour
 
 	return course, nil
 
-	//var course models.Course
-	//result := s.database.WithContext(ctx).First(&course, id)
-
-	//if result.Error != nil {
-	//return models.Course{}, fmt.Errorf("[in services.ListCourses] failed to scan courses: %w", result.Error)
-	//}
-
-	//return course, nil
 }
 
 func (s CourseService) UpdateCourse(ctx context.Context, courseID int, newName string) (models.Course, error) {
 	query := `UPDATE course SET name = $1 WHERE id = $2`
 	result, err := s.database.ExecContext(ctx, query, newName, courseID)
 	if err != nil {
-		log.Println()
+
 		return models.Course{}, fmt.Errorf("[in services.UpdateCourse] failed to update course: %w", err)
 	}
 
@@ -83,7 +74,8 @@ func (s CourseService) UpdateCourse(ctx context.Context, courseID int, newName s
 	}
 
 	if rowsAffected == 0 {
-		return models.Course{}, fmt.Errorf("[in services.UpdateCourse] no course found with id %d", courseID)
+		return models.Course{}, fmt.Errorf("[in services.UpdateCourse] no course found with id: %d", courseID)
+
 	}
 
 	return models.Course{

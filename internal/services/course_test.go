@@ -5,7 +5,6 @@ import (
 	"database/sql/driver"
 	"errors"
 	"fmt"
-	"log"
 	"regexp"
 	"testing"
 
@@ -120,6 +119,15 @@ func (s *testSuit) TestUpdateCourse() {
 			expectedReturn: models.Course{},
 			expectedError:  fmt.Errorf("[in services.UpdateCourse] failed to update course: %w", errors.New("test")),
 		},
+		"no rows affected": {
+			mockInputArgs:  []driver.Value{courseIn.Name, 88},
+			mockReturn:     sqlmock.NewResult(0, 0),
+			mockReturnErr:  nil,
+			inputID:        88,
+			inputCourse:    courseIn,
+			expectedReturn: models.Course{},
+			expectedError:  fmt.Errorf("[in services.UpdateCourse] no course found with id: %d", 88),
+		},
 	}
 
 	for name, tc := range testCases {
@@ -128,7 +136,6 @@ func (s *testSuit) TestUpdateCourse() {
 			exp := `UPDATE course 
 			SET name = $1 
 			WHERE id = $2`
-			log.Println(regexp.QuoteMeta(exp))
 			mock := s.dbMock.ExpectExec(regexp.QuoteMeta(exp)).
 				WithArgs(tc.mockInputArgs...)
 
