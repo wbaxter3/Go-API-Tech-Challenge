@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/httplog/v2"
 )
 
-type courseLister interface {
+type CourseLister interface {
 	ListCourses(ctx context.Context) ([]models.Course, error)
 }
 
@@ -21,8 +21,8 @@ type courseLister interface {
 // @Produce		json
 // @Success		200		{object}	handlers.responseCourses
 // @Failure		500		{object}	handlers.responseErr
-// @Router		/courses	[GET]
-func HandleListCourses(logger *httplog.Logger, service courseLister) http.HandlerFunc {
+// @Router		/api/course	[GET]
+func HandleListCourses(logger *httplog.Logger, service CourseLister) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup
 		ctx := r.Context()

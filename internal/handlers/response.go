@@ -44,9 +44,9 @@ type responseMsg struct {
 	Message string `json:"message"`
 }
 
-type responseID struct {
-	ObjectID int `json:"object_id"`
-}
+//type responseID struct {
+//ObjectID int `json:"object_id"`
+//}
 
 type responseErr struct {
 	Error            string    `json:"error,omitempty"`

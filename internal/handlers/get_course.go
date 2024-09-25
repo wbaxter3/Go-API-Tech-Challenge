@@ -12,21 +12,21 @@ import (
 	"github.com/go-chi/httplog/v2"
 )
 
-type courseGetter interface {
-	GetCourseByID(ctx context.Context, ID int) (models.Course, error)
+type CourseGetter interface {
+	GetCourse(ctx context.Context, ID int) (models.Course, error)
 }
 
-// HandleListCourses is a Handler that returns a list of all courses.
+// GetCourse is a Handler that returns the course associated with the given ID.
 //
-// @Summary		List all courses
-// @Description	List all courses
+// @Summary		Get Course
+// @Description	Gets course associated with given ID
 // @Tags		courses
 // @Accept		json
 // @Produce		json
-// @Success		200		{object}	handlers.responseCourses
+// @Success		200		{object}	handlers.responseCourse
 // @Failure		500		{object}	handlers.responseErr
-// @Router		/courses	[GET]
-func HandleGetCourseByID(logger *httplog.Logger, service courseGetter) http.HandlerFunc {
+// @Router		/course/{ID}	[GET]
+func HandleGetCourse(logger *httplog.Logger, service CourseGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		ctx := r.Context()
@@ -41,7 +41,7 @@ func HandleGetCourseByID(logger *httplog.Logger, service courseGetter) http.Hand
 			return
 		}
 		// get values from database
-		course, err := service.GetCourseByID(ctx, ID)
+		course, err := service.GetCourse(ctx, ID)
 		if err != nil {
 			log.Println(err)
 			logger.Error("error getting all courses", "error", err)

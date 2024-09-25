@@ -8,7 +8,7 @@ import (
 )
 
 type inputCourse struct {
-	Name string `json:"first_name"`
+	Name string `json:"name"`
 }
 
 // MapTo maps a inputUser to a models.User object.
@@ -26,7 +26,7 @@ func (course inputCourse) Valid() []problem {
 	// validate FirstName is not blank
 	if course.Name == "" {
 		problems = append(problems, problem{
-			Name:        "first_name",
+			Name:        "name",
 			Description: "must not be blank",
 		})
 	}

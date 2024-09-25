@@ -40,7 +40,11 @@ func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svs *services.Cours
 		router.Route("/course", func(router chi.Router) {
 
 			router.Get("/", handlers.HandleListCourses(logger, svs))
-			router.Get("/{ID}", handlers.HandleGetCourseByID(logger, svs))
+			router.Post("/", handlers.HandleCreateCourse(logger, svs))
+			router.Get("/{ID}", handlers.HandleGetCourse(logger, svs))
+			router.Put("/{ID}", handlers.HandleUpdateCourse(logger, svs))
+			router.Delete("/{ID}", handlers.HandleDeleteCourse(logger, svs))
+
 		})
 	})
 
