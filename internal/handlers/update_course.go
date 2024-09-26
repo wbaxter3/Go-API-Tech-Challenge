@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"go-api-tech-challenge/internal/models"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -61,7 +60,6 @@ func HandleUpdateCourse(logger *httplog.Logger, service CourseUpdater) http.Hand
 		// get values from database
 		course, err := service.UpdateCourse(ctx, courseID, courseIn.Name)
 		if err != nil {
-			log.Println(err)
 			logger.Error("error getting all courses", "error", err)
 			encodeResponse(w, logger, http.StatusInternalServerError, responseErr{
 				Error: "Error retrieving data",
@@ -70,9 +68,9 @@ func HandleUpdateCourse(logger *httplog.Logger, service CourseUpdater) http.Hand
 		}
 
 		// return response
-		coursesOut := mapOutputCourse(course)
+		courseOut := mapOutputCourse(course)
 		encodeResponse(w, logger, http.StatusOK, responseCourse{
-			Course: coursesOut,
+			Course: courseOut,
 		})
 	}
 }

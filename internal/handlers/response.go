@@ -18,8 +18,8 @@ type outputPerson struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Type      string `json:"type"`
-	Age       string `json:"age"`
-	Courses   []int  `json:"courses"`
+	Age       int    `json:"age"`
+	Courses   []int  `json:"courses,omitempty"`
 }
 
 // mapOutput maps a models.Course struct to an outputCourse struct.

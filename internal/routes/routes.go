@@ -50,6 +50,7 @@ func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svsCourse *services
 
 			router.Get("/", handlers.HandleListPersons(logger, svsPerson))
 			router.Get("/{name}", handlers.HandleGetPersonByName(logger, svsPerson))
+			router.Put("/{name}", handlers.HandleUpdatePerson(logger, svsPerson))
 
 		})
 	})

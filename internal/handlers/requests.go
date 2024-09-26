@@ -11,12 +11,77 @@ type inputCourse struct {
 	Name string `json:"name"`
 }
 
+type inputPerson struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Type      string `json:"type"`
+	Age       int    `json:"age"`
+	Courses   []int  `json:"courses,omitempty"`
+}
+
 // MapTo maps a inputUser to a models.User object.
 func (course inputCourse) MapTo() (models.Course, error) {
 	return models.Course{
 		ID:   0,
 		Name: course.Name,
 	}, nil
+}
+func (person inputPerson) MapTo() (models.Person, error) {
+	return models.Person{
+		ID:        0,
+		FirstName: person.FirstName,
+		LastName:  person.LastName,
+		Type:      person.Type,
+		Age:       person.Age,
+		Courses:   person.Courses,
+	}, nil
+}
+
+func (person inputPerson) Valid() []problem {
+	var problems []problem
+	validTypes := map[string]bool{
+		"student":   true,
+		"professor": true,
+	}
+
+	// validate FirstName is not blank
+	if person.FirstName == "" {
+		problems = append(problems, problem{
+			Name:        "name",
+			Description: "must not be blank",
+		})
+	}
+
+	if person.LastName == "" {
+		problems = append(problems, problem{
+			Name:        "name",
+			Description: "must not be blank",
+		})
+	}
+	if !validTypes[person.Type] {
+		problems = append(problems, problem{
+			Name:        "type",
+			Description: "must be either 'student' or 'professor'",
+		})
+	}
+	if person.Age < 0 {
+		problems = append(problems, problem{
+			Name:        "age",
+			Description: "must not be negative",
+		})
+	}
+	if len(person.Courses) > 0 {
+		for i, id := range person.Courses {
+			if id <= 0 {
+				problems = append(problems, problem{
+					Name:        fmt.Sprintf("courses[%d]", i),
+					Description: "course ID must be a positive integer",
+				})
+			}
+		}
+	}
+
+	return problems
 }
 
 // Valid validates all fields of an inputUser struct.
