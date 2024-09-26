@@ -15,12 +15,12 @@ type CourseGetter struct {
 	mock.Mock
 }
 
-// GetCourse provides a mock function with given fields: ctx, ID
-func (_m *CourseGetter) GetCourse(ctx context.Context, ID int) (models.Course, error) {
+// GetCourseByID provides a mock function with given fields: ctx, ID
+func (_m *CourseGetter) GetCourseByID(ctx context.Context, ID int) (models.Course, error) {
 	ret := _m.Called(ctx, ID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetCourse")
+		panic("no return value specified for GetCourseByID")
 	}
 
 	var r0 models.Course

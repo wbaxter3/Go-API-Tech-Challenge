@@ -8,27 +8,27 @@ import (
 	"github.com/go-chi/httplog/v2"
 )
 
-type CourseLister interface {
-	ListCourses(ctx context.Context) ([]models.Course, error)
+type PersonLister interface {
+	ListPersons(ctx context.Context) ([]models.Person, error)
 }
 
-// HandleListCourses is a Handler that returns a list of all courses.
+// HandleListPersons is a Handler that returns a list of all persons.
 //
-// @Summary		List all courses
-// @Description	List all courses
+// @Summary		List all persons
+// @Description	List all persons
 // @Tags		courses
 // @Accept		json
 // @Produce		json
-// @Success		200		{object}	handlers.responseCourses
+// @Success		200		{object}	handlers.responsePersons
 // @Failure		500		{object}	handlers.responseErr
 // @Router		/api/course	[GET]
-func HandleListCourses(logger *httplog.Logger, service CourseLister) http.HandlerFunc {
+func HandleListPersons(logger *httplog.Logger, service PersonLister) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup
 		ctx := r.Context()
 
 		// get values from database
-		courses, err := service.ListCourses(ctx)
+		persons, err := service.ListPersons(ctx)
 		if err != nil {
 			logger.Error("error getting all courses", "error", err)
 			encodeResponse(w, logger, http.StatusInternalServerError, responseErr{
@@ -38,9 +38,9 @@ func HandleListCourses(logger *httplog.Logger, service CourseLister) http.Handle
 		}
 
 		// return response
-		coursesOut := mapMultipleOutputCourse(courses)
-		encodeResponse(w, logger, http.StatusOK, responseCourses{
-			Courses: coursesOut,
+		personsOut := mapMultipleOutputPerson(persons)
+		encodeResponse(w, logger, http.StatusOK, responsePersons{
+			Persons: personsOut,
 		})
 	}
 }

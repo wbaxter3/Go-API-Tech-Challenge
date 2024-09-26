@@ -27,7 +27,7 @@ func TestHandleListUsers(t *testing.T) {
 		{ID: 2, Name: "Operating Systems"},
 	}
 
-	coursesOut := mapMultipleOutput(courses)
+	coursesOut := mapMultipleOutputCourse(courses)
 
 	tests := map[string]struct {
 		mockCalled   bool

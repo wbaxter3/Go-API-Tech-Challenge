@@ -13,10 +13,10 @@ import (
 )
 
 type CourseGetter interface {
-	GetCourse(ctx context.Context, ID int) (models.Course, error)
+	GetCourseByID(ctx context.Context, ID int) (models.Course, error)
 }
 
-// GetCourse is a Handler that returns the course associated with the given ID.
+// GetCourseByID is a Handler that returns the course associated with the given ID.
 //
 // @Summary		Get Course
 // @Description	Gets course associated with given ID
@@ -25,8 +25,8 @@ type CourseGetter interface {
 // @Produce		json
 // @Success		200		{object}	handlers.responseCourse
 // @Failure		500		{object}	handlers.responseErr
-// @Router		/course/{ID}	[GET]
-func HandleGetCourse(logger *httplog.Logger, service CourseGetter) http.HandlerFunc {
+// @Router		/api/course/{ID}	[GET]
+func HandleGetCourseByID(logger *httplog.Logger, service CourseGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		ctx := r.Context()
@@ -41,7 +41,7 @@ func HandleGetCourse(logger *httplog.Logger, service CourseGetter) http.HandlerF
 			return
 		}
 		// get values from database
-		course, err := service.GetCourse(ctx, ID)
+		course, err := service.GetCourseByID(ctx, ID)
 		if err != nil {
 			log.Println(err)
 			logger.Error("error getting all courses", "error", err)
@@ -52,7 +52,7 @@ func HandleGetCourse(logger *httplog.Logger, service CourseGetter) http.HandlerF
 		}
 
 		// return response
-		coursesOut := mapOutput(course)
+		coursesOut := mapOutputCourse(course)
 		encodeResponse(w, logger, http.StatusOK, responseCourse{
 			Course: coursesOut,
 		})

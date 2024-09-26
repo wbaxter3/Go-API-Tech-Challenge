@@ -22,7 +22,7 @@ func WithRegisterHealthRoute(registerHealthRoute bool) Option {
 	}
 }
 
-func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svs *services.CourseService, opts ...Option) {
+func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svsCourse *services.CourseService, svsPerson *services.PersonService, opts ...Option) {
 
 	options := routerOptions{
 		registerHealthRoute: false,
@@ -39,11 +39,17 @@ func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svs *services.Cours
 
 		router.Route("/course", func(router chi.Router) {
 
-			router.Get("/", handlers.HandleListCourses(logger, svs))
-			router.Post("/", handlers.HandleCreateCourse(logger, svs))
-			router.Get("/{ID}", handlers.HandleGetCourse(logger, svs))
-			router.Put("/{ID}", handlers.HandleUpdateCourse(logger, svs))
-			router.Delete("/{ID}", handlers.HandleDeleteCourse(logger, svs))
+			router.Get("/", handlers.HandleListCourses(logger, svsCourse))
+			router.Post("/", handlers.HandleCreateCourse(logger, svsCourse))
+			router.Get("/{ID}", handlers.HandleGetCourseByID(logger, svsCourse))
+			router.Put("/{ID}", handlers.HandleUpdateCourse(logger, svsCourse))
+			router.Delete("/{ID}", handlers.HandleDeleteCourse(logger, svsCourse))
+
+		})
+		router.Route("/person", func(router chi.Router) {
+
+			router.Get("/", handlers.HandleListPersons(logger, svsPerson))
+			router.Get("/{name}", handlers.HandleGetPersonByName(logger, svsPerson))
 
 		})
 	})

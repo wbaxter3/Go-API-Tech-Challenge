@@ -47,17 +47,19 @@ func (s CourseService) ListCourses(ctx context.Context) ([]models.Course, error)
 
 }
 
-func (s CourseService) GetCourse(ctx context.Context, courseID int) (models.Course, error) {
+func (s CourseService) GetCourseByID(ctx context.Context, id int) (models.Course, error) {
 	var course models.Course
 	query := "SELECT id, name FROM course WHERE id = $1"
-	err := s.database.QueryRowContext(
-		ctx, query, courseID).Scan(&course.ID, &course.Name)
+
+	err := s.database.QueryRowContext(ctx, query, id).Scan(&course.ID, &course.Name)
 	if err != nil {
-		return models.Course{}, fmt.Errorf("[in services.ListCourses] failed to get course: %w", err)
+		if err == sql.ErrNoRows {
+			return models.Course{}, fmt.Errorf("[in services.GetCourseByIDByID] no course found with id: %d", id)
+		}
+		return models.Course{}, fmt.Errorf("[in services.GetCourseByIDByID] failed to retrieve course: %w", err)
 	}
 
 	return course, nil
-
 }
 
 func (s CourseService) UpdateCourse(ctx context.Context, courseID int, newName string) (models.Course, error) {

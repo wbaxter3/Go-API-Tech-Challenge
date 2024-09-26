@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"go-api-tech-challenge/internal/models"
-	"log"
 	"net/http"
 
 	"github.com/go-chi/httplog/v2"
@@ -48,7 +47,6 @@ func HandleCreateCourse(logger *httplog.Logger, service CourseCreator) http.Hand
 		// get values from database
 		course, err := service.CreateCourse(ctx, courseIn.Name)
 		if err != nil {
-			log.Println(err)
 			logger.Error("error getting all courses", "error", err)
 			encodeResponse(w, logger, http.StatusInternalServerError, responseErr{
 				Error: "Error retrieving data",
@@ -57,7 +55,7 @@ func HandleCreateCourse(logger *httplog.Logger, service CourseCreator) http.Hand
 		}
 
 		// return response
-		coursesOut := mapOutput(course)
+		coursesOut := mapOutputCourse(course)
 		encodeResponse(w, logger, http.StatusOK, responseCourse{
 			Course: coursesOut,
 		})

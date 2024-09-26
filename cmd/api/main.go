@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go-api-tech-challenge/internal/config"
+	"go-api-tech-challenge/internal/database"
 	"go-api-tech-challenge/internal/routes"
 	"go-api-tech-challenge/internal/services"
 	"log"
@@ -18,17 +19,16 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httplog/v2"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
-	if err := run(); err != nil {
+	ctx := context.Background()
+	if err := run(ctx); err != nil {
 		log.Fatalf("Startup failed. err: %v", err)
 	}
 }
 
-func run() error {
+func run(ctx context.Context) error {
 	// Setup
 	cfg, err := config.New()
 	if err != nil {
@@ -51,10 +51,21 @@ func run() error {
 		cfg.DBPort,
 	)
 
-	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
+	db, err := database.New(
+		ctx,
+		connString,
+		logger,
+		time.Duration(cfg.DBRetryDuration)*time.Second,
+	)
 	if err != nil {
-		return fmt.Errorf("failed to connect to database: %w", err)
+		return fmt.Errorf("[in run]: %w", err)
 	}
+
+	defer func() {
+		if err = db.Close(); err != nil {
+			logger.Error("Error closing db connection", "err", err)
+		}
+	}()
 
 	router := chi.NewRouter()
 
@@ -66,8 +77,10 @@ func run() error {
 		MaxAge:         300,
 	}))
 
-	svs := services.NewCourseService(db)
-	routes.RegisterRoutes(router, logger, svs, routes.WithRegisterHealthRoute(true))
+	svsCourse := services.NewCourseService(db)
+	svsPerson := services.NewPersonService(db)
+
+	routes.RegisterRoutes(router, logger, svsCourse, svsPerson, routes.WithRegisterHealthRoute(true))
 
 	//if cfg.HTTPUseSwagger {
 	//swagger.RunSwagger(router, logger, cfg.HTTPDomain+cfg.HTTPPort)
