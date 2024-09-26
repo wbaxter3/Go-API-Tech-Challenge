@@ -47,14 +47,14 @@ func (person inputPerson) Valid() []problem {
 	// validate FirstName is not blank
 	if person.FirstName == "" {
 		problems = append(problems, problem{
-			Name:        "name",
+			Name:        "first_name",
 			Description: "must not be blank",
 		})
 	}
 
 	if person.LastName == "" {
 		problems = append(problems, problem{
-			Name:        "name",
+			Name:        "last_name",
 			Description: "must not be blank",
 		})
 	}

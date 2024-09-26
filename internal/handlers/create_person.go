@@ -5,31 +5,19 @@ import (
 	"go-api-tech-challenge/internal/models"
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/httplog/v2"
 )
 
-type PersonUpdater interface {
-	UpdatePerson(ctx context.Context, lastName string, updatedPerson models.Person) (models.Person, error)
+type PersonCreator interface {
+	CreatePerson(ctx context.Context, newPerson models.Person) (models.Person, error)
 }
 
-// HandleUpdatePerson is a Handler that updates a given person
-//
-// @Summary		Update Person
-// @Description	Updates person
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responsePerson
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/person/{name}	[PUT]
-func HandleUpdatePerson(logger *httplog.Logger, service PersonUpdater) http.HandlerFunc {
+func HandleCreatePerson(logger *httplog.Logger, service PersonCreator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup
 		ctx := r.Context()
-		lastName := chi.URLParam(r, "name")
 
-		// get values from database
+		// get values from request body
 		personIn, problems, err := decodeValidateBody[inputPerson, models.Person](r)
 		if err != nil {
 			switch {
@@ -47,18 +35,17 @@ func HandleUpdatePerson(logger *httplog.Logger, service PersonUpdater) http.Hand
 			return
 		}
 
-		person, err := service.UpdatePerson(ctx, lastName, personIn)
+		person, err := service.CreatePerson(ctx, personIn)
 		if err != nil {
-			logger.Error("error updating person", "error", err)
+			logger.Error("error creating person", "error", err)
 			encodeResponse(w, logger, http.StatusInternalServerError, responseErr{
-				Error: "Error retrieving data",
+				Error: "Error creating person",
 			})
 			return
 		}
 
-		// return response
 		personOut := mapOutputPerson(person)
-		encodeResponse(w, logger, http.StatusOK, responsePerson{
+		encodeResponse(w, logger, http.StatusCreated, responsePerson{
 			Person: personOut,
 		})
 	}

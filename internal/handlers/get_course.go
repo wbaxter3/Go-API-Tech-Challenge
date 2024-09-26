@@ -36,7 +36,7 @@ func HandleGetCourseByID(logger *httplog.Logger, service CourseGetter) http.Hand
 		if err != nil {
 			logger.Error("error getting ID", "error", err)
 			encodeResponse(w, logger, http.StatusBadRequest, responseErr{
-				Error: "Not a valid ID",
+				Error: "Error retrieving course",
 			})
 			return
 		}

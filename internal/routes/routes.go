@@ -49,8 +49,10 @@ func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svsCourse *services
 		router.Route("/person", func(router chi.Router) {
 
 			router.Get("/", handlers.HandleListPersons(logger, svsPerson))
+			router.Post("/", handlers.HandleCreatePerson(logger, svsPerson))
 			router.Get("/{name}", handlers.HandleGetPersonByName(logger, svsPerson))
 			router.Put("/{name}", handlers.HandleUpdatePerson(logger, svsPerson))
+			router.Delete("/{name}", handlers.HandleDeletePerson(logger, svsPerson))
 
 		})
 	})

@@ -44,7 +44,6 @@ func HandleCreateCourse(logger *httplog.Logger, service CourseCreator) http.Hand
 			}
 			return
 		}
-		// get values from database
 		course, err := service.CreateCourse(ctx, courseIn.Name)
 		if err != nil {
 			logger.Error("error getting all courses", "error", err)

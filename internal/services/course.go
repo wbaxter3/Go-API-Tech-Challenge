@@ -17,7 +17,7 @@ func NewCourseService(db *sql.DB) *CourseService {
 	}
 }
 
-func (s CourseService) ListCourses(ctx context.Context) ([]models.Course, error) {
+func (s *CourseService) ListCourses(ctx context.Context) ([]models.Course, error) {
 
 	query := `SELECT * FROM course`
 	rows, err := s.database.QueryContext(
@@ -47,7 +47,7 @@ func (s CourseService) ListCourses(ctx context.Context) ([]models.Course, error)
 
 }
 
-func (s CourseService) GetCourseByID(ctx context.Context, id int) (models.Course, error) {
+func (s *CourseService) GetCourseByID(ctx context.Context, id int) (models.Course, error) {
 	var course models.Course
 	query := "SELECT id, name FROM course WHERE id = $1"
 
@@ -62,7 +62,7 @@ func (s CourseService) GetCourseByID(ctx context.Context, id int) (models.Course
 	return course, nil
 }
 
-func (s CourseService) UpdateCourse(ctx context.Context, courseID int, newName string) (models.Course, error) {
+func (s *CourseService) UpdateCourse(ctx context.Context, courseID int, newName string) (models.Course, error) {
 	query := `UPDATE course SET name = $1 WHERE id = $2`
 	result, err := s.database.ExecContext(ctx, query, newName, courseID)
 	if err != nil {
@@ -86,7 +86,7 @@ func (s CourseService) UpdateCourse(ctx context.Context, courseID int, newName s
 	}, nil
 }
 
-func (s CourseService) CreateCourse(ctx context.Context, courseName string) (models.Course, error) {
+func (s *CourseService) CreateCourse(ctx context.Context, courseName string) (models.Course, error) {
 	query := `INSERT INTO course (name) VALUES ($1) RETURNING id`
 	var newID int
 
@@ -97,7 +97,7 @@ func (s CourseService) CreateCourse(ctx context.Context, courseName string) (mod
 	return models.Course{ID: newID, Name: courseName}, nil
 }
 
-func (s CourseService) DeleteCourse(ctx context.Context, courseID int) error {
+func (s *CourseService) DeleteCourse(ctx context.Context, courseID int) error {
 	query := `DELETE FROM course WHERE id = $1`
 
 	result, err := s.database.ExecContext(ctx, query, courseID)
