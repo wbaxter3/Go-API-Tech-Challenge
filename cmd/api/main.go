@@ -8,6 +8,7 @@ import (
 	"go-api-tech-challenge/internal/database"
 	"go-api-tech-challenge/internal/routes"
 	"go-api-tech-challenge/internal/services"
+	"go-api-tech-challenge/internal/swagger"
 	"log"
 	"net/http"
 	"os"
@@ -82,9 +83,9 @@ func run(ctx context.Context) error {
 
 	routes.RegisterRoutes(router, logger, svsCourse, svsPerson, routes.WithRegisterHealthRoute(true))
 
-	//if cfg.HTTPUseSwagger {
-	//swagger.RunSwagger(router, logger, cfg.HTTPDomain+cfg.HTTPPort)
-	//}
+	if cfg.HTTPUseSwagger {
+		swagger.RunSwagger(router, logger, cfg.SwaggerHTTPDomain+cfg.HTTPPort)
+	}
 
 	serverInstance := &http.Server{
 		Addr:              cfg.HTTPDomain + cfg.HTTPPort,

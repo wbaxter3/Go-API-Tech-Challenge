@@ -16,14 +16,15 @@ type CourseDeleter interface {
 
 // DeleteCourse is a Handler that returns the course associated with the given ID.
 //
-// @Summary		Deletes Course
-// @Description	Deletes course associated with given ID
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responseMsg
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/course/{ID}	[PUT]
+//	@Summary		Deletes Course
+//	@Description	Deletes course associated with given ID
+//	@Tags			courses
+//	@Accept			json
+//	@Produce		json
+//	@Param			ID					path	int		true "ID of course to delete"
+//	@Success		200					{object}	handlers.responseMsg
+//	@Failure		500					{object}	handlers.responseErr
+//	@Router			/api/course/{ID}	[DELETE]
 func HandleDeleteCourse(logger *httplog.Logger, service CourseDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 

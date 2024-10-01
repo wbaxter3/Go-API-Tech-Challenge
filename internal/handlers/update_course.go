@@ -17,14 +17,16 @@ type CourseUpdater interface {
 
 // UpdateCourse is a Handler that returns the course associated with the given ID.
 //
-// @Summary		Update Course
-// @Description	Updates course associated with given ID
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responseCourse
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/course/{ID}	[PUT]
+//	@Summary		Update Course
+//	@Description	Updates course associated with given ID
+//	@Tags			courses
+//	@Accept			json
+//	@Produce		json
+//	@Param			ID					path		int	true "ID of course to update"
+//	@Param			course				body		handlers.inputCourse	true	"Course Object"
+//	@Success		200					{object}	handlers.responseCourse
+//	@Failure		500					{object}	handlers.responseErr
+//	@Router			/api/course/{ID}	[PUT]
 func HandleUpdateCourse(logger *httplog.Logger, service CourseUpdater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 

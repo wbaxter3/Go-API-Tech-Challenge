@@ -15,14 +15,16 @@ type PersonUpdater interface {
 
 // HandleUpdatePerson is a Handler that updates a given person
 //
-// @Summary		Update Person
-// @Description	Updates person
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responsePerson
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/person/{name}	[PUT]
+//	@Summary		Update Person
+//	@Description	Updates person
+//	@Tags			person
+//	@Accept			json
+//	@Produce		json
+//	@Param			name				path		string	true "last name of person to update"
+//	@Param			person				body		handlers.inputPerson	true	"Person Object"
+//	@Success		200					{object}	handlers.responsePerson
+//	@Failure		500					{object}	handlers.responseErr
+//	@Router			/api/person/{name}	[PUT]
 func HandleUpdatePerson(logger *httplog.Logger, service PersonUpdater) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup

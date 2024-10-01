@@ -12,17 +12,17 @@ type PersonDeleter interface {
 	DeletePerson(ctx context.Context, lastName string) error
 }
 
-// HandleUpdatePerson is a Handler that updates a given person
+// HandleDeletePerson is a Handler that deletes a given person
 //
-// @Summary		Deletes Person
-// @Description	Deletes person
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responseMsg
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/course	[PUT]
-
+//	@Summary		Deletes Person
+//	@Description	Deletes person by name
+//	@Tags			person
+//	@Accept			json
+//	@Produce		json
+//	@Param			name				path		string	true "last name of person to delete"
+//	@Success		200					{object}	handlers.responseMsg
+//	@Failure		500					{object}	handlers.responseErr
+//	@Router			/api/person/{name}	[DELETE]
 func HandleDeletePerson(logger *httplog.Logger, service PersonDeleter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup

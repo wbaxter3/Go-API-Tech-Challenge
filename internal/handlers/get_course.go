@@ -18,14 +18,15 @@ type CourseGetter interface {
 
 // GetCourseByID is a Handler that returns the course associated with the given ID.
 //
-// @Summary		Get Course
-// @Description	Gets course associated with given ID
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responseCourse
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/course/{ID}	[GET]
+//	@Summary		Get Course
+//	@Description	Gets course associated with given ID
+//	@Tags			courses
+//	@Accept			json
+//	@Produce		json
+//	@Param			ID					path		int	true "ID of course to retrieve"
+//	@Success		200					{object}	handlers.responseCourse
+//	@Failure		500					{object}	handlers.responseErr
+//	@Router			/api/course/{ID}	[GET]
 func HandleGetCourseByID(logger *httplog.Logger, service CourseGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 

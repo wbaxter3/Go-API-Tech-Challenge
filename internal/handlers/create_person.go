@@ -12,6 +12,17 @@ type PersonCreator interface {
 	CreatePerson(ctx context.Context, newPerson models.Person) (models.Person, error)
 }
 
+// HandleCreatePerson is a Handler that creates a new person
+//
+//	@Summary		Creates Person
+//	@Description	Creates person
+//	@Tags			person
+//	@Accept			json
+//	@Produce		json
+//	@Param			person		body		handlers.inputPerson	true	"Person Object"
+//	@Success		200			{object}	handlers.responsePerson
+//	@Failure		500			{object}	handlers.responseErr
+//	@Router			/api/person	[POST]
 func HandleCreatePerson(logger *httplog.Logger, service PersonCreator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup

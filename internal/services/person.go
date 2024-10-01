@@ -129,7 +129,7 @@ func (s *PersonService) UpdatePerson(ctx context.Context, lastName string, updat
 	)
 
 	if err != nil {
-		tx.Rollback() // Rollback transaction on failure
+		tx.Rollback()
 		return models.Person{}, fmt.Errorf("failed to update person: %w", err)
 	}
 
@@ -210,7 +210,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 		for _, courseID := range person.Courses {
 			_, err := tx.ExecContext(ctx, insertCoursesQuery, createdPerson.ID, courseID)
 			if err != nil {
-				tx.Rollback() // rollback in case of error
+				tx.Rollback()
 				return models.Person{}, fmt.Errorf("failed to insert courses: %w", err)
 			}
 		}

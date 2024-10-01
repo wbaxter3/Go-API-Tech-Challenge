@@ -6,6 +6,5 @@ type Person struct {
 	LastName  string `json:"last_name"`
 	Type      string `json:"type"`
 	Age       int    `json:"age"`
-	//Courses   pq.Int64Array `json:"courses"`
-	Courses []int `json:"courses"`
+	Courses   []int  `json:"courses"`
 }

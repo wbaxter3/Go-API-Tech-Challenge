@@ -14,14 +14,14 @@ type CourseLister interface {
 
 // HandleListCourses is a Handler that returns a list of all courses.
 //
-// @Summary		List all courses
-// @Description	List all courses
-// @Tags		courses
-// @Accept		json
-// @Produce		json
-// @Success		200		{object}	handlers.responseCourses
-// @Failure		500		{object}	handlers.responseErr
-// @Router		/api/course	[GET]
+//	@Summary		List all courses
+//	@Description	List all courses
+//	@Tags			courses
+//	@Accept			json
+//	@Produce		json
+//	@Success		200			{object}	handlers.responseCourses
+//	@Failure		500			{object}	handlers.responseErr
+//	@Router			/api/course	[GET]
 func HandleListCourses(logger *httplog.Logger, service CourseLister) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// setup

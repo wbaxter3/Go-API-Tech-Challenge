@@ -19,7 +19,8 @@ func NewCourseService(db *sql.DB) *CourseService {
 
 func (s *CourseService) ListCourses(ctx context.Context) ([]models.Course, error) {
 
-	query := `SELECT * FROM course`
+	query := `SELECT * FROM course 
+	ORDER BY id asc`
 	rows, err := s.database.QueryContext(
 		ctx,
 		query,
