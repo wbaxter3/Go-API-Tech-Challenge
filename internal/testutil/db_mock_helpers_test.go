@@ -8,11 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type TestStruct struct {
+	ID   int
+	Name string
+}
+
 func TestMustStructsToRows(t *testing.T) {
-	type TestStruct struct {
-		ID   int
-		Name string
-	}
 
 	tests := map[string]struct {
 		input        []TestStruct
@@ -45,6 +46,35 @@ func TestMustStructsToRows(t *testing.T) {
 			}
 
 			rows := MustStructsToRows(tc.input)
+			assert.Equal(t, tc.expectedRows, rows)
+		})
+	}
+}
+
+func TestMustStructToEmptyRow(t *testing.T) {
+	tests := map[string]struct {
+		input        TestStruct
+		expectedRows *sqlmock.Rows
+		willPanic    bool
+	}{
+		"valid slice of structs": {
+			input: TestStruct{
+				ID:   1,
+				Name: "Alice",
+			},
+			expectedRows: sqlmock.NewRows([]string{"id", "name"}),
+			willPanic:    false,
+		},
+	}
+
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			if tc.willPanic {
+				assert.Panics(t, func() { MustStructToEmptyRow(tc.input) })
+				return
+			}
+
+			rows := MustStructToEmptyRow(tc.input)
 			assert.Equal(t, tc.expectedRows, rows)
 		})
 	}
