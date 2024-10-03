@@ -52,7 +52,6 @@ func HandleGetCourseByID(logger *httplog.Logger, service CourseGetter) http.Hand
 			return
 		}
 
-		// return response
 		coursesOut := mapOutputCourse(course)
 		encodeResponse(w, logger, http.StatusOK, responseCourse{
 			Course: coursesOut,

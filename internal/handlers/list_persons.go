@@ -37,7 +37,6 @@ func HandleListPersons(logger *httplog.Logger, service PersonLister) http.Handle
 			return
 		}
 
-		// return response
 		personsOut := mapMultipleOutputPerson(persons)
 		encodeResponse(w, logger, http.StatusOK, responsePersons{
 			Persons: personsOut,

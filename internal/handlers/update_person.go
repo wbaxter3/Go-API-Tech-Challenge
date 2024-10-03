@@ -58,7 +58,6 @@ func HandleUpdatePerson(logger *httplog.Logger, service PersonUpdater) http.Hand
 			return
 		}
 
-		// return response
 		personOut := mapOutputPerson(person)
 		encodeResponse(w, logger, http.StatusOK, responsePerson{
 			Person: personOut,

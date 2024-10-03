@@ -38,7 +38,6 @@ func HandleDeletePerson(logger *httplog.Logger, service PersonDeleter) http.Hand
 			return
 		}
 
-		// return response
 		encodeResponse(w, logger, http.StatusOK, responseMsg{
 			Message: "Person deleted successfully",
 		})

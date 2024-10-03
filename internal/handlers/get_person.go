@@ -40,7 +40,6 @@ func HandleGetPersonByName(logger *httplog.Logger, service PersonGetter) http.Ha
 			return
 		}
 
-		// return response
 		personOut := mapOutputPerson(persons)
 		encodeResponse(w, logger, http.StatusOK, responsePerson{
 			Person: personOut,

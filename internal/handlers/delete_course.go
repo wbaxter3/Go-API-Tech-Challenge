@@ -40,7 +40,6 @@ func HandleDeleteCourse(logger *httplog.Logger, service CourseDeleter) http.Hand
 			return
 		}
 
-		// get values from database
 		err = service.DeleteCourse(ctx, courseID)
 		if err != nil {
 
@@ -57,8 +56,6 @@ func HandleDeleteCourse(logger *httplog.Logger, service CourseDeleter) http.Hand
 			})
 			return
 		}
-
-		// return response
 
 		encodeResponse(w, logger, http.StatusOK, responseMsg{
 			Message: "Course deleted successfully",

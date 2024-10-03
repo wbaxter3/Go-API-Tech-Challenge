@@ -37,7 +37,6 @@ func HandleListCourses(logger *httplog.Logger, service CourseLister) http.Handle
 			return
 		}
 
-		// return response
 		coursesOut := mapMultipleOutputCourse(courses)
 		encodeResponse(w, logger, http.StatusOK, responseCourses{
 			Courses: coursesOut,

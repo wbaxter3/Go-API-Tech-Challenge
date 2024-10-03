@@ -69,7 +69,6 @@ func HandleUpdateCourse(logger *httplog.Logger, service CourseUpdater) http.Hand
 			return
 		}
 
-		// return response
 		courseOut := mapOutputCourse(course)
 		encodeResponse(w, logger, http.StatusOK, responseCourse{
 			Course: courseOut,
