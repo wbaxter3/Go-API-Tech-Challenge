@@ -214,6 +214,21 @@ paths:
       summary: Update Course
       tags:
       - courses
+  /api/health-check:
+    get:
+      consumes:
+      - application/json
+      description: Health check response
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.responseMsg'
+      summary: Health check response
+      tags:
+      - health-check
   /api/person:
     get:
       consumes:
@@ -337,19 +352,4 @@ paths:
       summary: Update Person
       tags:
       - person
-  /health-check:
-    get:
-      consumes:
-      - application/json
-      description: Health check response
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.responseMsg'
-      summary: Health check response
-      tags:
-      - health-check
 swagger: "2.0"

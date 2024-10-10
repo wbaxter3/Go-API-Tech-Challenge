@@ -201,6 +201,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/health-check": {
+            "get": {
+                "description": "Health check response",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health-check"
+                ],
+                "summary": "Health check response",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.responseMsg"
+                        }
+                    }
+                }
+            }
+        },
         "/api/person": {
             "get": {
                 "description": "List all persons",
@@ -382,29 +405,6 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/handlers.responseErr"
-                        }
-                    }
-                }
-            }
-        },
-        "/health-check": {
-            "get": {
-                "description": "Health check response",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "health-check"
-                ],
-                "summary": "Health check response",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.responseMsg"
                         }
                     }
                 }
