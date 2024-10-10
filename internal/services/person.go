@@ -61,7 +61,7 @@ func (s *PersonService) ListPersons(ctx context.Context) ([]models.Person, error
 	}
 
 	if err = rows.Err(); err != nil {
-		return []models.Person{}, fmt.Errorf("[in services.ListCourses] failed to scan courses: %w", err)
+		return []models.Person{}, fmt.Errorf("[in services.ListPersons] failed to scan courses: %w", err)
 	}
 
 	return persons, nil
@@ -130,7 +130,7 @@ func (s *PersonService) UpdatePerson(ctx context.Context, lastName string, updat
 
 	if err != nil {
 		tx.Rollback()
-		return models.Person{}, fmt.Errorf("failed to update person: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to update person: %w", err)
 	}
 
 	if len(updatedPerson.Courses) > 0 {
@@ -139,14 +139,14 @@ func (s *PersonService) UpdatePerson(ctx context.Context, lastName string, updat
 		_, err = tx.Exec(deleteCoursesQuery, person.ID)
 		if err != nil {
 			tx.Rollback()
-			return models.Person{}, fmt.Errorf("failed to delete existing courses: %w", err)
+			return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to delete existing courses: %w", err)
 		}
 		insertCoursesQuery := `INSERT INTO person_course (person_id, course_id) VALUES ($1, $2)`
 		for _, courseID := range updatedPerson.Courses {
 			_, err := tx.Exec(insertCoursesQuery, person.ID, courseID)
 			if err != nil {
 				tx.Rollback()
-				return models.Person{}, fmt.Errorf("failed to insert new courses: %w", err)
+				return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to insert new courses: %w", err)
 			}
 		}
 
@@ -157,7 +157,7 @@ func (s *PersonService) UpdatePerson(ctx context.Context, lastName string, updat
 	rows, err := tx.Query(selectCoursesQuery, person.ID)
 	if err != nil {
 		tx.Rollback()
-		return models.Person{}, fmt.Errorf("failed to retrieve updated courses: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to retrieve updated courses: %w", err)
 	}
 	defer rows.Close()
 
@@ -165,14 +165,14 @@ func (s *PersonService) UpdatePerson(ctx context.Context, lastName string, updat
 		var courseID int
 		if err := rows.Scan(&courseID); err != nil {
 			tx.Rollback()
-			return models.Person{}, fmt.Errorf("failed to scan course ID: %w", err)
+			return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to scan course ID: %w", err)
 		}
 		updatedCourseIDs = append(updatedCourseIDs, courseID)
 	}
 	person.Courses = updatedCourseIDs
 	err = tx.Commit()
 	if err != nil {
-		return models.Person{}, fmt.Errorf("failed to commit transaction: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.UpdatePerson] failed to commit transaction: %w", err)
 	}
 
 	return person, nil
@@ -202,7 +202,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 	)
 	if err != nil {
 		tx.Rollback()
-		return models.Person{}, fmt.Errorf("failed to insert person: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.CreatePerson] failed to insert person: %w", err)
 	}
 
 	if len(person.Courses) > 0 {
@@ -211,7 +211,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 			_, err := tx.ExecContext(ctx, insertCoursesQuery, createdPerson.ID, courseID)
 			if err != nil {
 				tx.Rollback()
-				return models.Person{}, fmt.Errorf("failed to insert courses: %w", err)
+				return models.Person{}, fmt.Errorf("[in services.CreatePerson] failed to insert courses: %w", err)
 			}
 		}
 	}
@@ -220,7 +220,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 	rows, err := tx.QueryContext(ctx, selectCoursesQuery, createdPerson.ID)
 	if err != nil {
 		tx.Rollback()
-		return models.Person{}, fmt.Errorf("failed to retrieve courses: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.CreatePerson] failed to retrieve courses: %w", err)
 	}
 	defer rows.Close()
 
@@ -229,7 +229,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 		var courseID int
 		if err := rows.Scan(&courseID); err != nil {
 			tx.Rollback()
-			return models.Person{}, fmt.Errorf("failed to scan course ID: %w", err)
+			return models.Person{}, fmt.Errorf("[in services.CreatePerson] failed to scan course ID: %w", err)
 		}
 		courses = append(courses, courseID)
 	}
@@ -238,7 +238,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 
 	err = tx.Commit()
 	if err != nil {
-		return models.Person{}, fmt.Errorf("failed to commit transaction: %w", err)
+		return models.Person{}, fmt.Errorf("[in services.CreatePerson] failed to commit transaction: %w", err)
 	}
 
 	return createdPerson, nil
@@ -247,7 +247,7 @@ func (s *PersonService) CreatePerson(ctx context.Context, person models.Person) 
 func (s *PersonService) DeletePerson(ctx context.Context, lastName string) error {
 	tx, err := s.database.BeginTx(ctx, nil)
 	if err != nil {
-		return fmt.Errorf("failed to begin transaction: %w", err)
+		return fmt.Errorf("[in services.DeletePerson] failed to begin transaction: %w", err)
 	}
 
 	deleteCoursesQuery := `DELETE FROM person_course WHERE person_id IN 
@@ -255,29 +255,29 @@ func (s *PersonService) DeletePerson(ctx context.Context, lastName string) error
 	_, err = tx.ExecContext(ctx, deleteCoursesQuery, lastName)
 	if err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to delete courses: %w", err)
+		return fmt.Errorf("[in services.DeletePerson] failed to delete courses: %w", err)
 	}
 
 	deletePersonQuery := `DELETE FROM person WHERE LOWER(last_name) = LOWER($1)`
 	result, err := tx.ExecContext(ctx, deletePersonQuery, lastName)
 	if err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to delete person: %w", err)
+		return fmt.Errorf("[in services.DeletePerson] failed to delete person: %w", err)
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		tx.Rollback()
-		return fmt.Errorf("failed to check rows affected: %w", err)
+		return fmt.Errorf("[in services.DeletePerson] failed to check rows affected: %w", err)
 	}
 	if rowsAffected == 0 {
 		tx.Rollback()
-		return fmt.Errorf("no person found with last name: %s", lastName)
+		return fmt.Errorf("[in services.DeletePerson] no person found with last name: %s", lastName)
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return fmt.Errorf("failed to commit transaction: %w", err)
+		return fmt.Errorf("[in services.DeletePerson] failed to commit transaction: %w", err)
 	}
 
 	return nil
