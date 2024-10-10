@@ -300,14 +300,14 @@ func (s *testSuit) TestDeleteCourse() {
 			mockReturn:    sqlmock.NewResult(0, 0),
 			mockReturnErr: nil,
 			inputID:       999,
-			expectedError: fmt.Errorf("[in services.ListCourses] no course found with id %d", 999),
+			expectedError: fmt.Errorf("[in services.DeleteCourse] no course found with id %d", 999),
 		},
 		"error executing delete": {
 			mockInputArgs: []driver.Value{1},
 			mockReturn:    nil,
 			mockReturnErr: errors.New("test error"),
 			inputID:       1,
-			expectedError: fmt.Errorf("[in services.ListCourses] failed to delete course: %w", errors.New("test error")),
+			expectedError: fmt.Errorf("[in services.DeleteCourse] failed to delete course: %w", errors.New("test error")),
 		},
 	}
 

@@ -103,16 +103,16 @@ func (s *CourseService) DeleteCourse(ctx context.Context, courseID int) error {
 
 	result, err := s.database.ExecContext(ctx, query, courseID)
 	if err != nil {
-		return fmt.Errorf("[in services.DeleteCourses] failed to delete course: %w", err)
+		return fmt.Errorf("[in services.DeleteCourse] failed to delete course: %w", err)
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("[in services.DeleteCourses] failed to get rows affected: %w", err)
+		return fmt.Errorf("[in services.DeleteCourse] failed to get rows affected: %w", err)
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("[in services.DeleteCourses] no course found with id %d", courseID)
+		return fmt.Errorf("[in services.DeleteCourse] no course found with id %d", courseID)
 	}
 
 	return nil

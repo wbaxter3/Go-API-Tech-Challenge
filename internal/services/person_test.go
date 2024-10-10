@@ -336,7 +336,7 @@ func (s *personTestSuite) TestDeletePerson() {
 			mockDeletePersonErr:  nil,
 			mockRowsAffected:     0,
 			mockCommitErr:        nil,
-			expectedError:        fmt.Errorf("failed to begin transaction: %w", errors.New("transaction begin error")),
+			expectedError:        fmt.Errorf("[in services.DeletePerson] failed to begin transaction: %w", errors.New("transaction begin error")),
 		},
 		"error deleting courses": {
 			mockBeginErr:         nil,
@@ -344,7 +344,7 @@ func (s *personTestSuite) TestDeletePerson() {
 			mockDeletePersonErr:  nil,
 			mockRowsAffected:     0,
 			mockCommitErr:        nil,
-			expectedError:        fmt.Errorf("failed to delete courses: %w", errors.New("delete courses error")),
+			expectedError:        fmt.Errorf("[in services.DeletePerson] failed to delete courses: %w", errors.New("delete courses error")),
 		},
 		"error deleting person": {
 			mockBeginErr:         nil,
@@ -352,7 +352,7 @@ func (s *personTestSuite) TestDeletePerson() {
 			mockDeletePersonErr:  errors.New("delete person error"),
 			mockRowsAffected:     0,
 			mockCommitErr:        nil,
-			expectedError:        fmt.Errorf("failed to delete person: %w", errors.New("delete person error")),
+			expectedError:        fmt.Errorf("[in services.DeletePerson] failed to delete person: %w", errors.New("delete person error")),
 		},
 		"no person found": {
 			mockBeginErr:         nil,
@@ -360,7 +360,7 @@ func (s *personTestSuite) TestDeletePerson() {
 			mockDeletePersonErr:  nil,
 			mockRowsAffected:     0,
 			mockCommitErr:        nil,
-			expectedError:        fmt.Errorf("no person found with last name: %s", lastName),
+			expectedError:        fmt.Errorf("[in services.DeletePerson] no person found with last name: %s", lastName),
 		},
 		"commit transaction error": {
 			mockBeginErr:         nil,
@@ -368,7 +368,7 @@ func (s *personTestSuite) TestDeletePerson() {
 			mockDeletePersonErr:  nil,
 			mockRowsAffected:     1,
 			mockCommitErr:        errors.New("commit transaction error"),
-			expectedError:        fmt.Errorf("failed to commit transaction: %w", errors.New("commit transaction error")),
+			expectedError:        fmt.Errorf("[in services.DeletePerson] failed to commit transaction: %w", errors.New("commit transaction error")),
 		},
 	}
 
