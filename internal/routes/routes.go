@@ -25,7 +25,7 @@ func WithRegisterHealthRoute(registerHealthRoute bool) Option {
 func RegisterRoutes(router *chi.Mux, logger *httplog.Logger, svsCourse *services.CourseService, svsPerson *services.PersonService, opts ...Option) {
 
 	options := routerOptions{
-		registerHealthRoute: false,
+		registerHealthRoute: true,
 	}
 	for _, opt := range opts {
 		opt(&options)
